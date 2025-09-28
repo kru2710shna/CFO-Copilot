@@ -192,6 +192,8 @@ streamlit run app.py
 4. Ask: *“What is our cash runway right now?”* → Line chart + KPI  
 5. Export PDF → Share CFO Summary  
 
+**🎥 Demo:** [Watch Video](https://drive.google.com/file/d/1A9h-YypFQQ0RZXPYxjwi_QpIGAUV0myn/view?usp=sharing)
+
 ---
 
 ## 🌟 Outcomes  
