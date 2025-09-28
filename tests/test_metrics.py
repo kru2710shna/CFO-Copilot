@@ -4,6 +4,11 @@ from agent.metrics import (
     get_revenue_vs_budget,
     get_gross_margin_trend,
     get_cash_runway,
+    get_opex_ratio,
+    get_revenue_growth,
+    get_burn_multiple,
+    get_entity_revenue,
+    get_ebitda_trend
 )
 
 
@@ -125,3 +130,38 @@ def test_cash_runway_exactly_zero_burn():
     result = get_cash_runway(df, cash_df)
     assert result["avg_burn"] == 0
     assert result["runway_months"] in [float("inf"), "∞ (profitable / not burning)"]
+
+
+def test_opex_ratio_basic():
+    df, _ = make_fake_data()
+    result = get_opex_ratio(df, "2023-01")
+    # Opex = 200, Revenue = 1000 → Ratio = 20%
+    assert result["opex"] == 200
+    assert result["revenue"] == 1000
+    assert round(result["opex_ratio_pct"], 1) == 20.0
+
+
+def test_opex_ratio_no_revenue():
+    df, _ = make_fake_data()
+    # Remove revenue rows
+    df = df[df["account_category"] != "Revenue"]
+    result = get_opex_ratio(df, "2023-01")
+    assert result["revenue"] == 0
+    assert result["opex_ratio_pct"] is None
+
+
+def test_revenue_growth_trend():
+    df, _ = make_fake_data()
+    growth = get_revenue_growth(df, 3)
+    assert "growth_pct" in growth.columns
+    # Growth from Jan (1000) → Feb (1500) = +50%
+    feb = growth[growth["month"] == "2023-02"].iloc[0]
+    assert round(feb["growth_pct"], 1) == 50.0
+
+
+def test_burn_multiple_basic():
+    df, cash_df = make_fake_data()
+    result = get_burn_multiple(df, cash_df, n_months=2)
+    assert "burn_multiple" in result
+    # Should return a finite or None value depending on data
+    assert result["burn_multiple"] is None or isinstance(result["burn_multiple"], float)
