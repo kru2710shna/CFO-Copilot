@@ -131,6 +131,8 @@ def test_cash_runway_exactly_zero_burn():
     assert result["avg_burn"] == 0
     assert result["runway_months"] in [float("inf"), "∞ (profitable / not burning)"]
 
+# OTHER TESTING 
+
 
 def test_opex_ratio_basic():
     df, _ = make_fake_data()
@@ -165,3 +167,9 @@ def test_burn_multiple_basic():
     assert "burn_multiple" in result
     # Should return a finite or None value depending on data
     assert result["burn_multiple"] is None or isinstance(result["burn_multiple"], float)
+
+
+# Test prompts
+# What was revenue vs budget in January 2023?
+# What was revenue vs budget in January 2023?
+#  
